@@ -26,15 +26,22 @@ void setup_tonegenerator() {
 
 void chirp(unsigned int ms) {
   soundOn = true;
+  
   unsigned long start = millis();
   unsigned int oldTone = -1;
+  
   while (millis() - start <= ms) {
+    
+    // Doing this here saves an addition and division in the ISR
     currentTone = (c1Tone + c2Tone) / 2;
+
+    // Only change generated tone when needed.
     if (oldTone != currentTone) {
       tone(tone_output_pin, currentTone);      
       unsigned oldTone = currentTone;
     }
   }
+  
   noTone(tone_output_pin);
   soundOn = false;
 }

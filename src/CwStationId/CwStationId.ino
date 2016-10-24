@@ -9,8 +9,8 @@
  * It's just for laughs. Enjoy.
  */
 
-// Size of a dot
-const int dotLoop = 6;
+// Duration in mS of a dot.
+const int dotTime = 90;
 
 void setup() {
   setup_tonegenerator();
@@ -30,21 +30,21 @@ void loop() {
 }
 
 void dot() {
-  chirp(100);
-  delay(100);
+  chirp(dotTime);
+  delay(dotTime);
 }
 
 void dash(){
-  chirp(300);
-  delay(100);
+  chirp(3* dotTime);
+  delay(dotTime);
 }
 
 void dotRest(){
-  delay(100);
+  delay(dotTime);
 }
 
 void dashRest(){
-  delay(300);
+  delay(3 * dotTime);
 }
 
  
