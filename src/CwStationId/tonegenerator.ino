@@ -7,7 +7,7 @@ long targetTone = 600;
  
 // The target tones of the "oscillators" when muted
 const long c1TargetTone = 800;
-const long c2TargetTone = 450;
+const long c2TargetTone = 425;
 
 // Speed of attack/decay of both oscillators (lower is faster)
 const int c1Speed = 2;

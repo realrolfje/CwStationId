@@ -13,6 +13,9 @@ const char PROGMEM CWTEXT[] = "= FUN FOX =";
 
 void setup() {
   setup_tonegenerator();
+
+  cwSendText();
+  delay(2000);
 }
 
 void loop() {
