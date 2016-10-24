@@ -9,15 +9,45 @@
  * It's just for laughs. Enjoy.
  */
 
-const char PROGMEM CWTEXT[] = "THIS IS YOUR CALL";
+const char PROGMEM CWTEXT[] = "= FUN FOX =";
 
 void setup() {
   setup_tonegenerator();
 }
 
 void loop() {
-  cwSendText();
-  delay(4000);
+  byte choice = random(4); // random from 0-3
+  switch (choice) {
+    case 1: downlow(); break;
+    case 2: tatu(); break;
+    case 3: beepbop(); break;
+    default: cwSendText();
+
+  }
+  delay(random(4000, 10000));
 }
 
- 
+void tatu(){
+  for (int i=0; i<random(5,20); i++) {
+    setTargetTone(800);
+    chirp(500);
+    setTargetTone(500);
+    chirp(500);
+  }
+}
+
+void beepbop(){
+  for(int i=0; i<random(50,150); i++) {
+    setTargetTone(random(300, 1000));
+    chirp(random(50,300));
+    delay(random(50,300));
+  }
+  resetTargetTone();
+}
+
+void downlow() {
+  setTargetTone(80);
+  chirp(2000);
+  resetTargetTone();
+}
+

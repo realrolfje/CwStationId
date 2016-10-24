@@ -1,11 +1,13 @@
 #include <TimerOne.h>   
 
 const byte tone_output_pin = 8;
-const long targetTone = 600;
+const long standardTone = 600;
+
+long targetTone = 600;
  
 // The target tones of the "oscillators" when muted
 const long c1TargetTone = 800;
-const long c2TargetTone = 400;
+const long c2TargetTone = 450;
 
 // Speed of attack/decay of both oscillators (lower is faster)
 const int c1Speed = 2;
@@ -22,6 +24,16 @@ volatile boolean soundOn = false;
 void setup_tonegenerator() {
   Timer1.initialize(12000);                // microseconds between interrupts
   Timer1.attachInterrupt( calculateTone ); // routine called on interrupt
+}
+
+void resetTargetTone() {
+  setTargetTone(standardTone);
+}
+
+void setTargetTone(long newTone) {
+  targetTone = newTone;
+  c1Tone = c1TargetTone;
+  c2Tone = c2TargetTone;
 }
 
 void chirp(unsigned int ms) {
