@@ -13,20 +13,25 @@ const char PROGMEM CWTEXT[] = "= FUN FOX =";
 
 void setup() {
   setup_tonegenerator();
+  setup_dra();
 
+  txOn();
   cwSendText();
+  txOff();
   delay(2000);
 }
 
 void loop() {
   byte choice = random(4); // random from 0-3
+  txOn();
   switch (choice) {
     case 1: downlow(); break;
     case 2: tatu(); break;
     case 3: beepbop(); break;
     default: cwSendText();
-
   }
+  txOff();
+
   delay(random(4000, 10000));
 }
 
