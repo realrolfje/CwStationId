@@ -9,42 +9,15 @@
  * It's just for laughs. Enjoy.
  */
 
-// Duration in mS of a dot.
-const int dotTime = 90;
+const char PROGMEM CWTEXT[] = "THIS IS YOUR CALL";
 
 void setup() {
   setup_tonegenerator();
 }
 
 void loop() {
-  // Sorry, no lookuptables here. Being lazy.
-  
-  dot();  dash(); dash(); dot();          dashRest();
-  dot();  dash();                         dashRest();
-  dash(); dash(); dash(); dash(); dash(); dashRest();
-  dash(); dash(); dot(); dash();          dashRest();
-  dash(); dash(); dot();                  dashRest();
-  dash(); dash(); dot(); dot();           dashRest();
-
+  cwSendText();
   delay(4000);
-}
-
-void dot() {
-  chirp(dotTime);
-  delay(dotTime);
-}
-
-void dash(){
-  chirp(3* dotTime);
-  delay(dotTime);
-}
-
-void dotRest(){
-  delay(dotTime);
-}
-
-void dashRest(){
-  delay(3 * dotTime);
 }
 
  
