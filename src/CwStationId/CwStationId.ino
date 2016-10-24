@@ -12,23 +12,8 @@
 // Size of a dot
 const int dotLoop = 6;
 
-// Target tone
-const int targetTone = 800;
-
-// c1 target when no tone
-const unsigned long c1TargetTone = 1300;
-
-// c2 target when no tone
-const unsigned long c2TargetTone = 400;
-
-// The tone "after" C1 of the oscillator
-unsigned long c1Tone = c1TargetTone;
-
-// The tone "after" C2 of the oscillator
-unsigned long c2Tone = c2TargetTone;
-
 void setup() {
-  // Where we're going we don't need no setup.
+  setup_tonegenerator();
 }
 
 void loop() {
@@ -41,62 +26,25 @@ void loop() {
   dash(); dash(); dot();                  dashRest();
   dash(); dash(); dot(); dot();           dashRest();
 
-  // Wait 4 minutes
-  long again = millis() + 1000*60*4;
-  while (millis() < again){
-    dotRest();
-  }
+  delay(4000);
 }
 
-void dot(){
-  for(int i=0; i<dotLoop; i++){
-    int currentTone = calculateTone(targetTone);
-    tone(8, currentTone);
-    delay(10);
-  }
-  dotRest();
+void dot() {
+  chirp(100);
+  delay(100);
 }
 
 void dash(){
-  for(int i=0; i<3*dotLoop; i++){
-    int currentTone = calculateTone(targetTone);
-    tone(8, currentTone);
-    delay(10);
-  }
-  dotRest();
+  chirp(300);
+  delay(100);
 }
 
 void dotRest(){
-  for(int i=0; i<dotLoop; i++){
-    int currentTone = calculateTone(0);
-    noTone(8);
-    delay(10);
-  }
+  delay(100);
 }
 
 void dashRest(){
-  for(int i=0; i<3*dotLoop; i++){
-    int currentTone = calculateTone(0);
-    noTone(8);
-    delay(10);
-  }
+  delay(300);
 }
 
-unsigned int calculateTone(unsigned int targetTone) {
-   const int c1Speed = 2;
-   const int c2Speed = 300;
-  
-   if (targetTone == 0) {
-     // No sound, deplete the condensers.
-     c1Tone = (c1Tone* (c1Speed -1) + c1TargetTone) /  c1Speed;  // Fast filter
-     c2Tone = (c2Tone* (c2Speed -1) + c2TargetTone) /  c2Speed;  // Slow filter
-     
-   } else {
-     // Sound, charge the condensers.
-     c1Tone = (c1Tone* (c1Speed -1) + targetTone) /  c1Speed;  // Fast filter
-     c2Tone = (c2Tone* (c2Speed -1) + targetTone) /  c2Speed;  // Slow filter
-   }
-  
-   return (c1Tone + c2Tone) / 2;
-}
  
