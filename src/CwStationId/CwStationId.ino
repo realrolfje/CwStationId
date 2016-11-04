@@ -26,6 +26,7 @@ void loop() {
 //  choice = 10; // always default
   
   txOn();
+
   switch (choice) {
     case 1: downlow(); break;
     case 2: tatu(); break;
@@ -34,6 +35,7 @@ void loop() {
     default: cwSendText();
   }
   txOff();
+  drasleep();
 
   delay(random(4000, 10000));
 }

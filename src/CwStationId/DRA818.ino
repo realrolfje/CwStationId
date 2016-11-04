@@ -26,13 +26,17 @@
 #define BW_12_5 "0"
 #define BW_25_0 "1"
 
-#define TX_PIN 10 /* Output, Low is transmit */
-#define SQ_PIN 9  /* Input,  Low is signal detect */
+#define TX_PIN 10    /* Output, Low is transmit */
+#define SLEEP_PIN 7  /* Output, High = active, Low = sleep */
+#define SQ_PIN 9     /* Input,  Low is signal detect */
+
 SoftwareSerial draSerial(11, 12); // RX, TX
 
 boolean drabooted = false;
+boolean drasleeping = true;
 
 void setup_dra() {
+  drawake();
   if (!drabooted) {
     // Wait for the AD818 module to boot.
     delay(4000);
@@ -43,7 +47,23 @@ void setup_dra() {
   setVHF();
 }
 
+void drasleep(){
+  digitalWrite(SLEEP_PIN, LOW);  
+  drasleeping = true;
+}
+
+void drawake(){
+  digitalWrite(SLEEP_PIN, HIGH);  
+  drasleeping = false;
+}
+
 void txOn() {
+  if (drasleeping){
+    // Makes sure that even after power failure we
+    // are transmitting on the correct frequency.
+    setup_dra();
+  }
+  
   waitForFreeChannel();
   Serial.println("TX");
 
