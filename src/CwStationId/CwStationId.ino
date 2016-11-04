@@ -9,25 +9,28 @@
  * It's just for laughs. Enjoy.
  */
 
-const char PROGMEM CWTEXT[] = "= FUN FOX =";
+const char PROGMEM CWTEXT[] = "TEST";
 
 void setup() {
-  setup_tonegenerator();
-  setup_dra();
-
-  txOn();
-  cwSendText();
+  Serial.begin(9600);
   txOff();
-  delay(2000);
+  setup_tonegenerator();
+  pinMode(LED_BUILTIN, OUTPUT);
+  setup_dra();
 }
 
 void loop() {
-  byte choice = random(4); // random from 0-3
+  
+  byte choice = random(5); // random from 0-4
+  
+//  choice = 10; // always default
+  
   txOn();
   switch (choice) {
     case 1: downlow(); break;
     case 2: tatu(); break;
     case 3: beepbop(); break;
+    case 4: diewdiewdiew(); break;
     default: cwSendText();
   }
   txOff();
@@ -36,6 +39,7 @@ void loop() {
 }
 
 void tatu(){
+  Serial.println("tatu");
   for (int i=0; i<random(5,20); i++) {
     setTargetTone(800);
     chirp(500);
@@ -45,6 +49,7 @@ void tatu(){
 }
 
 void beepbop(){
+  Serial.println("beepbop");
   for(int i=0; i<random(50,150); i++) {
     setTargetTone(random(300, 1000));
     chirp(random(50,300));
@@ -54,8 +59,40 @@ void beepbop(){
 }
 
 void downlow() {
+  Serial.println("downlow");
   setTargetTone(80);
   chirp(2000);
   resetTargetTone();
+}
+
+const int diewtime = 130;
+void diewdiewdiew(){
+    Serial.println("diewdiewdiew");
+
+    // P
+    diewdit(); diewdah(); diewdah(); diewdit();
+    delay(6*diewtime);
+
+    // I
+    diewdit(); diewdit();
+    delay(6*diewtime);
+    
+    // 4
+    diewdit(); diewdah(); diewdah(); diewdah(); diewdah(); 
+    delay(6*diewtime);
+
+   // etcetera
+}
+
+void diewdit(){
+    chirp(diewtime); delay(diewtime);
+    delay(3*diewtime);
+}
+
+void diewdah(){
+    chirp(diewtime); delay(diewtime);
+    chirp(diewtime); delay(diewtime);
+    chirp(diewtime); delay(diewtime);
+    delay(3*diewtime);
 }
 

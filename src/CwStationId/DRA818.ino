@@ -1,6 +1,7 @@
 /*
  * Simple hack for getting the Dorji DRA818V to transmit our audio.
  */
+#include <SoftwareSerial.h>
 
 // ctcss frequency ( 0000 - 0038 )
 // First 16 frequencies are:
@@ -25,41 +26,91 @@
 #define BW_12_5 "0"
 #define BW_25_0 "1"
 
-#define TX_PIN 10
+#define TX_PIN 10 /* Output, Low is transmit */
+#define SQ_PIN 9  /* Input,  Low is signal detect */
+SoftwareSerial draSerial(11, 12); // RX, TX
+
+boolean drabooted = false;
 
 void setup_dra() {
-  // Wait for the AD818 module to boot.
-  delay(100);
+  if (!drabooted) {
+    // Wait for the AD818 module to boot.
+    delay(4000);
+  }
+
+  pinMode(TX_PIN, OUTPUT);
+  pinMode(SQ_PIN, INPUT);
   setVHF();
 }
 
-void txOn(){
-  digitalWrite(TX_PIN, HIGH);  
+void txOn() {
+  waitForFreeChannel();
+  Serial.println("TX");
+
+  digitalWrite(TX_PIN, LOW);  
+  digitalWrite(LED_BUILTIN, HIGH);  
+  delay(1000); // TX initialization time of DR818
 }
 
-void txOff(){
-  digitalWrite(TX_PIN, LOW);
+void txOff() {
+  Serial.println("RX");
+  digitalWrite(TX_PIN, HIGH);
+  digitalWrite(LED_BUILTIN, LOW);  
 }
 
 // set parameters for DRA818V
 void setVHF() {
-  Serial.begin(9600);
-  Serial.print("AT+DMOSETGROUP=");
-  Serial.print(BW_12_5);     // Bandwith
-  Serial.print(",");
-  Serial.print("145.2250,"); // tx frequency in MHz
-  Serial.print("145.2250,"); // rx frequency in MHz
-  Serial.print(CTCSS_OFF);   // tx CTCSS
-  Serial.print(",3,");       // squelch level  
-                             // ( 0 - 8 ); 0 = "open" 
-  Serial.println(CTCSS_OFF); // rx CTCSS
-
-  // Although we could read the response here, for
-  // we will assume it went well and ignore the
-  // response.
-  delay(5);
+  draSerial.begin(9600);
+  
+  // Check if module is online
+  draSerial.println("AT+DMOCONNECT");
+  printDRAResponse();
+  
+  // Set frequency
+  draSerial.print("AT+DMOSETGROUP=");
+  draSerial.print(BW_12_5);     // Bandwith
+  draSerial.print(",");
+  draSerial.print("145.2250,"); // tx frequency in MHz
+  draSerial.print("145.2250,"); // rx frequency in MHz
+  draSerial.print(CTCSS_OFF);   // tx CTCSS
+  draSerial.print(",3,");       // squelch level  
+                                // ( 0 - 8 ); 0 = "open" 
+  draSerial.println(CTCSS_OFF); // rx CTCSS
+  
+  printDRAResponse();
   
   // Set output Volume
-  Serial.println("AT+DMOSETVOLUME=8");
-  Serial.end();
+  draSerial.println("AT+DMOSETVOLUME=8");
+  printDRAResponse();
+  
+  draSerial.end();
+  Serial.println("dra setup done");
 }
+
+void waitForFreeChannel() {
+  Serial.print("Waiting for free channel...");
+  // SQ_PIN needs to be high for a second (no signal)
+  int i=100;
+  while (i > 0) {
+    if (digitalRead(SQ_PIN)) {
+      i--;
+    } else {
+      i = 100;
+    }
+    delay(10);
+  }
+  Serial.println("channel free.");
+  return;
+}
+
+void printDRAResponse() {
+    delay(100);
+    Serial.print(">");
+    while (draSerial.available() > 0) {
+      // read the incoming byte:
+      char incommingByte = draSerial.read();
+      Serial.print(incommingByte);
+    }
+    Serial.println();
+}
+
