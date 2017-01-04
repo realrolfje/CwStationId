@@ -106,10 +106,10 @@ void cwSendCharacter(byte character)
  */
 void cwSound(int dits, boolean on) {
   if (on) {
-    chirp(dits*dotTime);
+    chirp(dits * dotTime);
     delay(dotTime);
   } else {
-    delay(dits*dotTime);
+    delay(dits * dotTime);
   }
 }
 

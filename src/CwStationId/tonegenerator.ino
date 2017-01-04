@@ -3,7 +3,7 @@
 const byte tone_output_pin = 8;
 const long standardTone = 600;
 
-long targetTone = 600;
+volatile long targetTone = 600;
  
 // The target tones of the "oscillators" when muted
 const long c1TargetTone = 800;

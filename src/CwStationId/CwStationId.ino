@@ -9,7 +9,7 @@
  * It's just for laughs. Enjoy.
  */
 
-const char PROGMEM CWTEXT[] = "TEST";
+const char PROGMEM CWTEXT[] = "= PI4RCG VOS =";
 
 void setup() {
   Serial.begin(9600);
@@ -19,11 +19,18 @@ void setup() {
   setup_dra();
 }
 
+long stationIdTime=0;
+
 void loop() {
   
   byte choice = random(5); // random from 0-4
+  if (millis() > stationIdTime) {
+    choice = 99; // send station id.    
+  }
+  
   
 //  choice = 10; // always default
+
   
   txOn();
 
@@ -32,10 +39,12 @@ void loop() {
     case 2: tatu(); break;
     case 3: beepbop(); break;
     case 4: diewdiewdiew(); break;
-    default: cwSendText();
+    default: 
+        cwSendText();
+        stationIdTime = millis() + 2 * 60000;
   }
   txOff();
-  drasleep();
+//  drasleep();
 
   delay(random(4000, 10000));
 }
@@ -83,7 +92,17 @@ void diewdiewdiew(){
     diewdit(); diewdah(); diewdah(); diewdah(); diewdah(); 
     delay(6*diewtime);
 
-   // etcetera
+    // R
+    diewdit(); diewdah(); diewdit(); 
+    delay(6*diewtime);
+
+    // C
+    diewdah(); diewdit(); diewdah(); diewdit(); 
+    delay(6*diewtime);
+
+    // G
+    diewdah(); diewdah(); diewdit(); 
+    delay(6*diewtime);
 }
 
 void diewdit(){

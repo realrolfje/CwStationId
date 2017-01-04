@@ -47,7 +47,7 @@ void setup_dra() {
   setVHF();
 }
 
-void drasleep(){
+void xdrasleep(){
   digitalWrite(SLEEP_PIN, LOW);  
   drasleeping = true;
 }
@@ -55,6 +55,7 @@ void drasleep(){
 void drawake(){
   digitalWrite(SLEEP_PIN, HIGH);  
   drasleeping = false;
+  delay(50);
 }
 
 void txOn() {
@@ -69,7 +70,7 @@ void txOn() {
 
   digitalWrite(TX_PIN, LOW);  
   digitalWrite(LED_BUILTIN, HIGH);  
-  delay(1000); // TX initialization time of DR818
+  delay(1500); // TX initialization time of DR818
 }
 
 void txOff() {
